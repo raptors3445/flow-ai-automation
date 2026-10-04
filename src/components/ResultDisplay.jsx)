@@ -1,0 +1,43 @@
+'use client';
+import { useState } from 'react';
+
+export default function ResultDisplay({ output, loading }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    if (!output) return;
+    navigator.clipboard.writeText(output);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-8 text-center space-y-3">
+        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
+        <p className="text-sm text-slate-400">FlowAI Engine is processing your request...</p>
+      </div>
+    );
+  }
+
+  if (!output) return null;
+
+  return (
+    <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-3 relative shadow-2xl">
+      <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+        <span className="text-xs font-semibold text-indigo-400 uppercase tracking-wider">
+          Execution Result
+        </span>
+        <button
+          onClick={handleCopy}
+          className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-md transition-all border border-slate-700 flex items-center gap-1"
+        >
+          {copied ? '✓ Copied to Clipboard' : '📋 Copy Output'}
+        </button>
+      </div>
+      <pre className="text-sm text-slate-200 whitespace-pre-wrap font-mono bg-slate-950 p-4 rounded-lg border border-slate-800/80 leading-relaxed overflow-x-auto">
+        {output}
+      </pre>
+    </div>
+  );
+}
